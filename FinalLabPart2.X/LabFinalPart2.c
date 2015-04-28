@@ -44,9 +44,17 @@ _CONFIG2( IESO_OFF & SOSCSEL_SOSC & WUTSEL_LEG & FNOSC_PRIPLL & FCKSM_CSDCMD & O
 void initLEDs();
 void turnOnLED(int led);
 void assignColors();
+
+
+//---------------PINS-----------------------------
 //Pins used for the sensors:
 //left 23, middle 24, right 25
 //Rb 12-14
+
+//Pins used for UART
+//TX = Pin 17
+//RX = Pin 18
+//-----------------------------------------------
 
 //FSM STATES--------------------
 typedef enum stateTypeEnum
@@ -78,6 +86,8 @@ int main(void) {
     initPWMRight();
     initADC();
     initSW1();
+
+    initUART();
 
     currState = wait;
 
