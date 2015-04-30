@@ -8,10 +8,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "p24FJ64GA002.h"
+#include "lcd.h"
 #include "timer.h"
 #include "adc.h"
 #include "pwm.h"
 #include "initSW.h"
+#include "uartComm.h"
 #include <stdio.h>
 
 _CONFIG1( JTAGEN_OFF & GCP_OFF & GWRP_OFF & BKBUG_ON & COE_OFF & ICS_PGx1 &
@@ -41,20 +43,21 @@ _CONFIG2( IESO_OFF & SOSCSEL_SOSC & WUTSEL_LEG & FNOSC_PRIPLL & FCKSM_CSDCMD & O
 #define changeThreshold 200 //The threshold at which the black line is detected
 #define RightChangeThreshold  200
 
+// DEFINES FOR PART 2.
+// TODO: define values for these.
+#define BUTTON1 'U' //UP
+#define BUTTON2 'D' //DOWN
+#define BUTTON3 'C' //CENTER
+#define BUTTONLEFT 'L'
+#define BUTTONRIGHT 'R'
+#define BUTTONSPEED -1 //Increase Speed
+
 void initLEDs();
 void turnOnLED(int led);
 void assignColors();
-
-
-//---------------PINS-----------------------------
 //Pins used for the sensors:
 //left 23, middle 24, right 25
 //Rb 12-14
-
-//Pins used for UART
-//TX = Pin 17
-//RX = Pin 18
-//-----------------------------------------------
 
 //FSM STATES--------------------
 typedef enum stateTypeEnum
@@ -78,29 +81,74 @@ volatile int sensorLeft;
 volatile int sensorMiddle;
 volatile int sensorRight;
 
+volatile char dataReceived;
+
 
 int main(void) {
     //Initialize components
+    //char v[3];
     initLEDs();
     initPWMLeft();
     initPWMRight();
     initADC();
     initSW1();
 
-    initUART();
+    initUART(); // Init UART.
 
     currState = wait;
 
-    while(1){
+    sensorRightReading = rightSensorADC();
+    sensorMiddleReading = middleSensorADC();
+    sensorLeftReading = leftSensorADC();
+    assignColors();
+    turnOnLED(13);
 
-       sensorRightReading = rightSensorADC();
-       sensorMiddleReading = middleSensorADC();
-       sensorLeftReading = leftSensorADC();
-       assignColors();
-       turnOnLED(13);
+    while(true){
+
+        if (currState != wait){ // Don't waste processing power reading the ADC while in wait state.
+            sensorRightReading = rightSensorADC();
+            sensorMiddleReading = middleSensorADC();
+            sensorLeftReading = leftSensorADC();
+            assignColors();
+            turnOnLED(13);
+        }
        switch (currState){
             case wait:
-                idleFunction();
+                /*
+                 For part 2, The device will listen for commands with bluetooth while we are in the wait state.
+                 Other states will be left in, but we will only enter them if the switch is pressed.
+                 */
+
+                // TODO: check if waitforChar function works, decide what to do with certain button presses.
+
+                dataReceived = waitForChar(); // Receives an int via UART.
+
+                if (dataReceived == BUTTON1){
+                    // forward
+                    spinForward();
+                }
+                if (dataReceived == BUTTON2){
+                    // backwards
+                    spinBackward();
+                }
+                if (dataReceived == BUTTON3){
+                    // stop
+                    idleFunction();
+                }
+                if (dataReceived == BUTTONLEFT){
+                    // Adjust left
+                    turnLeft();
+                }
+                if (dataReceived == BUTTONRIGHT){
+                    // Adjust Right
+                    turnRight();
+                }
+                if (dataReceived == BUTTONSPEED){
+                    // Adjust Speed
+                    ///// Make this function.
+                }
+
+                //idleFunction();
                 break;
             case forwardState:
                 spinForward();
@@ -155,7 +203,6 @@ void _ISR _ADC1Interrupt(void){
         }else {
             currState = forwardState;
         }
-
 
    }
 //----------------------------------------------------------------------------

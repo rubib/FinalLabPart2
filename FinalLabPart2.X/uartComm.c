@@ -31,15 +31,16 @@ void initUART(){
     //Configuring the UART
     U1BRG  = BRGVAL;
     U1MODE = 0x8000;
-    U1MODEbits.PDSEL = 2;
+    U1MODEbits.PDSEL = 0;// 8 bit no parity
+    U1MODEbits.STSEL = 0; // 1 stop bit
     U1STA  = 0x0440;
 
     //Putting the UART interrupt flag down.
     IFS0bits.U1RXIF = 0;
 }
 
-void waitForChar(){
-    int receivedChar;
+char waitForChar(){
+    char receivedChar;
     // Use the UART RX interrupt flag to wait until we recieve a character.
     while(IFS0bits.U1RXIF == 1){
         // Clear the UART RX interrupt flag to we can detect the reception

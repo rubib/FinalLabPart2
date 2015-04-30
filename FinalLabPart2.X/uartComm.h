@@ -10,6 +10,6 @@
 #define	UARTCOMM_H
 
 void initUART();
-void waitForChar();
+char waitForChar();
 
 #endif	/* UARTCOMM_H */
