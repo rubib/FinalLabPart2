@@ -45,8 +45,8 @@ _CONFIG2( IESO_OFF & SOSCSEL_SOSC & WUTSEL_LEG & FNOSC_PRIPLL & FCKSM_CSDCMD & O
 
 // DEFINES FOR PART 2.
 // TODO: define values for these.
-#define BUTTON1 'U' //UP
-#define BUTTON2 'D' //DOWN
+#define BUTTON1 'u' //UP
+#define BUTTON2 'd' //DOWN
 #define BUTTON3 'C' //CENTER
 #define BUTTONLEFT 'L'
 #define BUTTONRIGHT 'R'
@@ -103,8 +103,10 @@ int main(void) {
     assignColors();
     turnOnLED(13);
 
+    LED4 = OFF;
+    
     while(true){
-
+        LED4=OFF;
         if (currState != wait){ // Don't waste processing power reading the ADC while in wait state.
             sensorRightReading = rightSensorADC();
             sensorMiddleReading = middleSensorADC();
@@ -122,6 +124,8 @@ int main(void) {
                 // TODO: check if waitforChar function works, decide what to do with certain button presses.
 
                 dataReceived = waitForChar(); // Receives an int via UART.
+               // LED4 = OFF;
+                if (dataReceived)
 
                 if (dataReceived == BUTTON1){
                     // forward

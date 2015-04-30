@@ -29,7 +29,7 @@ void initPWMLeft(){
     ODCBbits.ODB2 = 1; //Output Drain Collector Pin 6
 
     OC1R = 0; //very important
-    OC1RS = 14;
+    OC1RS = STOP;
     T3CONbits.TON = 1;
 }
 
@@ -42,28 +42,26 @@ void initPWMRight(){
     //ODCBbits.ODB12 = 1;
 
     OC2R = 0; //very important
-    OC2RS = 14;
+    OC2RS = STOP;
 }
 
 void spinForward(){
     /*
      FOR LEFT
      */
-//    RPOR1bits.RP2R = 0;  // Sets Pin 6 PWM to NULL. This stops Pin 6 from using PWM
-//    ODCBbits.ODB1 = 0;  // Pin 5
-//    RPOR0bits.RP1R = 18; // Pin 5
-//    ODCBbits.ODB2 = 1; // Pin 6
+    RPOR1bits.RP2R = 0;  // Sets Pin 6 PWM to NULL. This stops Pin 6 from using PWM
+    ODCBbits.ODB1 = 0;  // Pin 5
+    RPOR0bits.RP1R = 18; // Pin 5
+    ODCBbits.ODB2 = 1; // Pin 6
     OC1RS = FULLSPEEDRIGHT;
 
     /*
      FOR RIGHT
      */
-//    RPOR2bits.RP4R = 0; // Pin 11
-//    //RPOR6bits.RP12R = 0;
-//    ODCBbits.ODB3 = 0;  // Pin 7
-//    RPOR1bits.RP3R = 19; // Pin 7
-//    ODCBbits.ODB4 = 1; // Pin 11
-    //ODCBbits.ODB12 = 1;
+    RPOR2bits.RP4R = 0; // Pin 11
+    ODCBbits.ODB3 = 0;  // Pin 7
+    RPOR1bits.RP3R = 19; // Pin 7
+    ODCBbits.ODB4 = 1; // Pin 11
     OC2RS = STOP;
 
 }
