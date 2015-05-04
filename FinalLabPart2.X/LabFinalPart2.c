@@ -45,8 +45,8 @@ _CONFIG2( IESO_OFF & SOSCSEL_SOSC & WUTSEL_LEG & FNOSC_PRIPLL & FCKSM_CSDCMD & O
 
 // DEFINES FOR PART 2.
 // TODO: define values for these.
-#define BUTTON1 'u' //UP
-#define BUTTON2 'd' //DOWN
+#define BUTTON1 'U' //UP
+#define BUTTON2 'D' //DOWN
 #define BUTTON3 'C' //CENTER
 #define BUTTONLEFT 'L'
 #define BUTTONRIGHT 'R'
@@ -86,14 +86,14 @@ volatile char dataReceived;
 
 int main(void) {
     //Initialize components
-    //char v[3];
+    initUART(); // Init UART.
     initLEDs();
     initPWMLeft();
     initPWMRight();
     initADC();
     initSW1();
 
-    initUART(); // Init UART.
+   // initUART(); // Init UART.
 
     currState = wait;
 
@@ -103,10 +103,10 @@ int main(void) {
     assignColors();
     turnOnLED(13);
 
-    LED4 = OFF;
+   // LED4 = OFF;
     
     while(true){
-        LED4=OFF;
+        
         if (currState != wait){ // Don't waste processing power reading the ADC while in wait state.
             sensorRightReading = rightSensorADC();
             sensorMiddleReading = middleSensorADC();
@@ -123,9 +123,6 @@ int main(void) {
 
                 // TODO: check if waitforChar function works, decide what to do with certain button presses.
 
-                dataReceived = waitForChar(); // Receives an int via UART.
-               // LED4 = OFF;
-                if (dataReceived)
 
                 if (dataReceived == BUTTON1){
                     // forward
@@ -262,4 +259,12 @@ void assignColors(){
     }else {
         sensorLeft = white;
     }
+}
+
+void __attribute__((interrupt,auto_psv)) _U2RXInterrupt(void){
+    IFS1bits.U2RXIF = 0;
+    LED4=ON;
+    LED4=OFF;
+    dataReceived = U2RXREG;
+    LED4=ON;
 }

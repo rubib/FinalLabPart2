@@ -6,7 +6,7 @@ Tool Name:
 Command:
   -p24FJ64GA002 \
   -o \
-  dist/default/production/FinalLabPart2.X.production.elf \
+  dist/default/debug/FinalLabPart2.X.debug.elf \
   -Lc:/program files (x86)/microchip/xc16/v1.24/bin/bin/.. \
   -Lc:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib \
   -Lc:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib/PIC24E \
@@ -21,14 +21,22 @@ Command:
   -Lc:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../support/dsPIC33E/gld \
   -Lc:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib/dsPIC33F \
   -Lc:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../support/dsPIC33F/gld \
-  build/default/production/LabFinalPart2.o \
-  build/default/production/pwm.o \
-  build/default/production/timer.o \
-  build/default/production/adc.o \
-  build/default/production/initSW.o \
-  build/default/production/uartComm.o \
+  build/default/debug/LabFinalPart2.o \
+  build/default/debug/pwm.o \
+  build/default/debug/timer.o \
+  build/default/debug/adc.o \
+  build/default/debug/initSW.o \
+  build/default/debug/uartComm.o \
+  -TC:\Users\Rubi\AppData\Local\Temp\tmp00000e00.00 \
+  -TC:\Users\Rubi\AppData\Local\Temp\tmp00000e00.01 \
+  -TC:\Users\Rubi\AppData\Local\Temp\tmp00000e00.02 \
+  -TC:\Users\Rubi\AppData\Local\Temp\tmp00000e00.03 \
+  -TC:\Users\Rubi\AppData\Local\Temp\tmp00000e00.04 \
   --defsym=__MPLAB_BUILD=1 \
-  -Tp24FJ64GA002.gld.00 \
+  --defsym=__MPLAB_DEBUG=1 \
+  --defsym=__DEBUG=1 \
+  --defsym=__MPLAB_DEBUGGER_PK3=1 \
+  -Tp24FJ64GA002.gld.05 \
   --stack=16 \
   --check-sections \
   --data-init \
@@ -40,7 +48,7 @@ Command:
   --stackguard=16 \
   --no-force-link \
   --smart-io \
-  -Map=dist/default/production/FinalLabPart2.X.production.map \
+  -Map=dist/default/debug/FinalLabPart2.X.debug.map \
   --report-mem \
   -start-group \
   --library=pic30-elf \
@@ -55,13 +63,13 @@ c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(data_init_standard.o)
                               c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o) (__data_init_standard)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
-                              build/default/production/pwm.o (___fixunssfsi)
+                              build/default/debug/pwm.o (___fixunssfsi)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
-                              build/default/production/pwm.o (___floatunsisf)
+                              build/default/debug/pwm.o (___floatunsisf)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack.eo)
                               c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo) (__funpack)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
-                              build/default/production/pwm.o (___mulsf3)
+                              build/default/debug/pwm.o (___mulsf3)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
                               c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatunsisf.eo) (___floatundisf)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fpack.eo)
@@ -87,9 +95,14 @@ Data Memory  [Origin = 0x800, Length = 0x2000]
 
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
-.nbss                        0x800                   0            0x10  (16)
+reserve_data_0x800           0x800                0x20            0x20  (32)
+reserve_data_0x820           0x820                 0x2             0x2  (2)
+reserve_data_0x822           0x822                 0x2             0x2  (2)
+reserve_data_0x824           0x824                 0x2             0x2  (2)
+reserve_data_0x826           0x826                0x2a            0x2a  (42)
+.nbss                        0x850                   0            0x10  (16)
 
-                        Total data memory used (bytes):           0x10  (16) <1%
+                        Total data memory used (bytes):           0x60  (96) 1%
 
 
 Dynamic Memory Usage
@@ -97,32 +110,32 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0x810                              0x1ff0  (8176)
+stack                        0x860                              0x1fa0  (8096)
 
-                        Maximum dynamic memory (bytes):         0x1ff0  (8176)
+                        Maximum dynamic memory (bytes):         0x1fa0  (8096)
 
 
 External Symbols in Data Memory (by address):
 
-                    0x0800                  _currState
-                    0x0802                  _sensorLeftReading
-                    0x0804                  _sensorMiddleReading
-                    0x0806                  _sensorRightReading
-                    0x0808                  _sensorLeft
-                    0x080a                  _sensorMiddle
-                    0x080c                  _sensorRight
-                    0x080e                  _dataReceived
+                    0x0850                  _currState
+                    0x0852                  _sensorLeftReading
+                    0x0854                  _sensorMiddleReading
+                    0x0856                  _sensorRightReading
+                    0x0858                  _sensorLeft
+                    0x085a                  _sensorMiddle
+                    0x085c                  _sensorRight
+                    0x085e                  _dataReceived
 
 External Symbols in Data Memory (by name):
 
-                    0x0800                  _currState
-                    0x080e                  _dataReceived
-                    0x0808                  _sensorLeft
-                    0x0802                  _sensorLeftReading
-                    0x080a                  _sensorMiddle
-                    0x0804                  _sensorMiddleReading
-                    0x080c                  _sensorRight
-                    0x0806                  _sensorRightReading
+                    0x0850                  _currState
+                    0x085e                  _dataReceived
+                    0x0858                  _sensorLeft
+                    0x0852                  _sensorLeftReading
+                    0x085a                  _sensorMiddle
+                    0x0854                  _sensorMiddleReading
+                    0x085c                  _sensorRight
+                    0x0856                  _sensorRightReading
 
 External Symbols in Program Memory (by address):
 
@@ -225,13 +238,41 @@ CONFIG1          0x00abfe           0x000002
 
 Linker script and memory map
 
-LOAD build/default/production/LabFinalPart2.o
-LOAD build/default/production/pwm.o
-LOAD build/default/production/timer.o
-LOAD build/default/production/adc.o
-LOAD build/default/production/initSW.o
-LOAD build/default/production/uartComm.o
+LOAD build/default/debug/LabFinalPart2.o
+LOAD build/default/debug/pwm.o
+LOAD build/default/debug/timer.o
+LOAD build/default/debug/adc.o
+LOAD build/default/debug/initSW.o
+LOAD build/default/debug/uartComm.o
+
+reserve_data_0x800
+                    0x0800         0x20
+                    0x0820                  . = 0x20
+ *fill*             0x0800         0x2000
+
+reserve_data_0x820
+                    0x0820          0x2
+                    0x0822                  . = 0x2
+ *fill*             0x0820          0x200
+
+reserve_data_0x822
+                    0x0822          0x2
+                    0x0824                  . = 0x2
+ *fill*             0x0822          0x200
+
+reserve_data_0x824
+                    0x0824          0x2
+                    0x0826                  . = 0x2
+ *fill*             0x0824          0x200
+
+reserve_data_0x826
+                    0x0826         0x2a
+                    0x0850                  . = 0x2a
+ *fill*             0x0826         0x2a00
                     0x0001                  __MPLAB_BUILD = 0x1
+                    0x0001                  __MPLAB_DEBUG = 0x1
+                    0x0001                  __DEBUG = 0x1
+                    0x0001                  __MPLAB_DEBUGGER_PK3 = 0x1
 LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib/PIC24F\libpPIC24Fxxx-elf.a
 LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libfx-elf.a
                     0xabfc                  __CONFIG2 = 0xabfc
@@ -301,60 +342,60 @@ usercode
 
 __CONFIG2         0x00abfc          0x2
  *(__CONFIG2.sec*)
- __CONFIG2.sec    0x00abfc          0x2 build/default/production/LabFinalPart2.o
+ __CONFIG2.sec    0x00abfc          0x2 build/default/debug/LabFinalPart2.o
 
 __CONFIG1         0x00abfe          0x2
  *(__CONFIG1.sec*)
- __CONFIG1.sec    0x00abfe          0x2 build/default/production/LabFinalPart2.o
+ __CONFIG1.sec    0x00abfe          0x2 build/default/debug/LabFinalPart2.o
 
 .comment
  *(.comment)
 
 .debug_info       0x000000       0x37d8
  *(.debug_info)
- .debug_info      0x000000        0xaa3 build/default/production/LabFinalPart2.o
- .debug_info      0x000aa3        0xaf9 build/default/production/pwm.o
- .debug_info      0x00159c        0x667 build/default/production/timer.o
- .debug_info      0x001c03        0xbcb build/default/production/adc.o
- .debug_info      0x0027ce        0x5b8 build/default/production/initSW.o
- .debug_info      0x002d86        0xa52 build/default/production/uartComm.o
+ .debug_info      0x000000        0xaa3 build/default/debug/LabFinalPart2.o
+ .debug_info      0x000aa3        0xaf9 build/default/debug/pwm.o
+ .debug_info      0x00159c        0x667 build/default/debug/timer.o
+ .debug_info      0x001c03        0xbcb build/default/debug/adc.o
+ .debug_info      0x0027ce        0x5b8 build/default/debug/initSW.o
+ .debug_info      0x002d86        0xa52 build/default/debug/uartComm.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000        0x64d
  *(.debug_abbrev)
- .debug_abbrev    0x000000        0x16f build/default/production/LabFinalPart2.o
- .debug_abbrev    0x00016f         0xb6 build/default/production/pwm.o
- .debug_abbrev    0x000225        0x12f build/default/production/timer.o
- .debug_abbrev    0x000354        0x11e build/default/production/adc.o
- .debug_abbrev    0x000472         0xbd build/default/production/initSW.o
- .debug_abbrev    0x00052f        0x11e build/default/production/uartComm.o
+ .debug_abbrev    0x000000        0x16f build/default/debug/LabFinalPart2.o
+ .debug_abbrev    0x00016f         0xb6 build/default/debug/pwm.o
+ .debug_abbrev    0x000225        0x12f build/default/debug/timer.o
+ .debug_abbrev    0x000354        0x11e build/default/debug/adc.o
+ .debug_abbrev    0x000472         0xbd build/default/debug/initSW.o
+ .debug_abbrev    0x00052f        0x11e build/default/debug/uartComm.o
 
 .debug_line       0x000000        0xd02
  *(.debug_line)
- .debug_line      0x000000        0x3e2 build/default/production/LabFinalPart2.o
- .debug_line      0x0003e2        0x2aa build/default/production/pwm.o
- .debug_line      0x00068c        0x18a build/default/production/timer.o
- .debug_line      0x000816        0x2ea build/default/production/adc.o
- .debug_line      0x000b00         0xc7 build/default/production/initSW.o
- .debug_line      0x000bc7        0x13b build/default/production/uartComm.o
+ .debug_line      0x000000        0x3e2 build/default/debug/LabFinalPart2.o
+ .debug_line      0x0003e2        0x2aa build/default/debug/pwm.o
+ .debug_line      0x00068c        0x18a build/default/debug/timer.o
+ .debug_line      0x000816        0x2ea build/default/debug/adc.o
+ .debug_line      0x000b00         0xc7 build/default/debug/initSW.o
+ .debug_line      0x000bc7        0x13b build/default/debug/uartComm.o
 
 .debug_frame      0x000000        0x208
  *(.debug_frame)
- .debug_frame     0x000000         0x84 build/default/production/LabFinalPart2.o
- .debug_frame     0x000084         0x94 build/default/production/pwm.o
- .debug_frame     0x000118         0x44 build/default/production/timer.o
- .debug_frame     0x00015c         0x54 build/default/production/adc.o
- .debug_frame     0x0001b0         0x24 build/default/production/initSW.o
- .debug_frame     0x0001d4         0x34 build/default/production/uartComm.o
+ .debug_frame     0x000000         0x84 build/default/debug/LabFinalPart2.o
+ .debug_frame     0x000084         0x94 build/default/debug/pwm.o
+ .debug_frame     0x000118         0x44 build/default/debug/timer.o
+ .debug_frame     0x00015c         0x54 build/default/debug/adc.o
+ .debug_frame     0x0001b0         0x24 build/default/debug/initSW.o
+ .debug_frame     0x0001d4         0x34 build/default/debug/uartComm.o
 
 .debug_str        0x000000        0x24b
  *(.debug_str)
- .debug_str       0x000000         0xa3 build/default/production/LabFinalPart2.o
- .debug_str       0x0000a3         0x47 build/default/production/pwm.o
- .debug_str       0x0000ea         0x26 build/default/production/timer.o
- .debug_str       0x000110         0xda build/default/production/adc.o
- .debug_str       0x0001ea         0x26 build/default/production/initSW.o
- .debug_str       0x000210         0x3b build/default/production/uartComm.o
+ .debug_str       0x000000         0xa3 build/default/debug/LabFinalPart2.o
+ .debug_str       0x0000a3         0x47 build/default/debug/pwm.o
+ .debug_str       0x0000ea         0x26 build/default/debug/timer.o
+ .debug_str       0x000110         0xda build/default/debug/adc.o
+ .debug_str       0x0001ea         0x26 build/default/debug/initSW.o
+ .debug_str       0x000210         0x3b build/default/debug/uartComm.o
 
 .debug_loc
  *(.debug_loc)
@@ -366,17 +407,17 @@ __CONFIG1         0x00abfe          0x2
                   0x000000        0x298
  *(.debug_pubnames)
  .debug_pubnames
-                  0x000000        0x12c build/default/production/LabFinalPart2.o
+                  0x000000        0x12c build/default/debug/LabFinalPart2.o
  .debug_pubnames
-                  0x00012c         0x8f build/default/production/pwm.o
+                  0x00012c         0x8f build/default/debug/pwm.o
  .debug_pubnames
-                  0x0001bb         0x39 build/default/production/timer.o
+                  0x0001bb         0x39 build/default/debug/timer.o
  .debug_pubnames
-                  0x0001f4         0x57 build/default/production/adc.o
+                  0x0001f4         0x57 build/default/debug/adc.o
  .debug_pubnames
-                  0x00024b         0x1e build/default/production/initSW.o
+                  0x00024b         0x1e build/default/debug/initSW.o
  .debug_pubnames
-                  0x000269         0x2f build/default/production/uartComm.o
+                  0x000269         0x2f build/default/debug/uartComm.o
 
 .debug_ranges
  *(.debug_ranges)
@@ -384,17 +425,17 @@ __CONFIG1         0x00abfe          0x2
 .debug_aranges    0x000000         0x90
  *(.debug_aranges)
  .debug_aranges
-                  0x000000         0x18 build/default/production/LabFinalPart2.o
+                  0x000000         0x18 build/default/debug/LabFinalPart2.o
  .debug_aranges
-                  0x000018         0x18 build/default/production/pwm.o
+                  0x000018         0x18 build/default/debug/pwm.o
  .debug_aranges
-                  0x000030         0x18 build/default/production/timer.o
+                  0x000030         0x18 build/default/debug/timer.o
  .debug_aranges
-                  0x000048         0x18 build/default/production/adc.o
+                  0x000048         0x18 build/default/debug/adc.o
  .debug_aranges
-                  0x000060         0x18 build/default/production/initSW.o
+                  0x000060         0x18 build/default/debug/initSW.o
  .debug_aranges
-                  0x000078         0x18 build/default/production/uartComm.o
+                  0x000078         0x18 build/default/debug/uartComm.o
 
 .ivt              0x000004         0xfc
                   0x000004          0x4 LONG 0x29a DEFINED (__ReservedTrap0)?ABSOLUTE (__ReservedTrap0):ABSOLUTE (__DefaultInterrupt)
@@ -1232,39 +1273,39 @@ LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.
 LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a
 LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libc-elf.a
 END GROUP
-OUTPUT(dist/default/production/FinalLabPart2.X.production.elf elf32-pic30)
+OUTPUT(dist/default/debug/FinalLabPart2.X.debug.elf elf32-pic30)
 LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
                   0x000090        0x46a
  .debug_pubtypes
-                  0x000090         0xc7 build/default/production/LabFinalPart2.o
+                  0x000090         0xc7 build/default/debug/LabFinalPart2.o
  .debug_pubtypes
-                  0x000157         0xed build/default/production/pwm.o
+                  0x000157         0xed build/default/debug/pwm.o
  .debug_pubtypes
-                  0x000244         0x8a build/default/production/timer.o
+                  0x000244         0x8a build/default/debug/timer.o
  .debug_pubtypes
-                  0x0002ce         0xd8 build/default/production/adc.o
+                  0x0002ce         0xd8 build/default/debug/adc.o
  .debug_pubtypes
-                  0x0003a6         0x8a build/default/production/initSW.o
+                  0x0003a6         0x8a build/default/debug/initSW.o
  .debug_pubtypes
-                  0x000430         0xca build/default/production/uartComm.o
+                  0x000430         0xca build/default/debug/uartComm.o
 
 __c30_signature
                   0x0004fa         0x60
  __c30_signature
-                  0x0004fa          0x6 build/default/production/LabFinalPart2.o
+                  0x0004fa          0x6 build/default/debug/LabFinalPart2.o
  __c30_signature
-                  0x000500          0x6 build/default/production/pwm.o
+                  0x000500          0x6 build/default/debug/pwm.o
  __c30_signature
-                  0x000506          0x6 build/default/production/timer.o
+                  0x000506          0x6 build/default/debug/timer.o
  __c30_signature
-                  0x00050c          0x6 build/default/production/adc.o
+                  0x00050c          0x6 build/default/debug/adc.o
  __c30_signature
-                  0x000512          0x6 build/default/production/initSW.o
+                  0x000512          0x6 build/default/debug/initSW.o
  __c30_signature
-                  0x000518          0x6 build/default/production/uartComm.o
+                  0x000518          0x6 build/default/debug/uartComm.o
  __c30_signature
                   0x00051e          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o)
  __c30_signature
@@ -1286,19 +1327,19 @@ __c30_signature
  __c30_signature
                   0x000554          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(futil.eo)
 
-.nbss               0x0800         0x10
- .nbss              0x0800         0x10 build/default/production/LabFinalPart2.o
-                    0x0800                  _currState
-                    0x0802                  _sensorLeftReading
-                    0x0804                  _sensorMiddleReading
-                    0x0806                  _sensorRightReading
-                    0x0808                  _sensorLeft
-                    0x080a                  _sensorMiddle
-                    0x080c                  _sensorRight
-                    0x080e                  _dataReceived
+.nbss               0x0850         0x10
+ .nbss              0x0850         0x10 build/default/debug/LabFinalPart2.o
+                    0x0850                  _currState
+                    0x0852                  _sensorLeftReading
+                    0x0854                  _sensorMiddleReading
+                    0x0856                  _sensorRightReading
+                    0x0858                  _sensorLeft
+                    0x085a                  _sensorMiddle
+                    0x085c                  _sensorRight
+                    0x085e                  _dataReceived
 
 .text             0x000444        0x5d2
- .text            0x000444        0x1d8 build/default/production/LabFinalPart2.o
+ .text            0x000444        0x1d8 build/default/debug/LabFinalPart2.o
                   0x000444                  _main
                   0x0004f8                  __CNInterrupt
                   0x00052c                  __ADC1Interrupt
@@ -1306,12 +1347,12 @@ __c30_signature
                   0x00058c                  _turnOnLED
                   0x0005b8                  _assignColors
                   0x0005f4                  __U2RXInterrupt
- .text            0x00061c        0x196 build/default/production/adc.o
+ .text            0x00061c        0x196 build/default/debug/adc.o
                   0x00061c                  _initADC
                   0x00067a                  _leftSensorADC
                   0x0006e2                  _middleSensorADC
                   0x00074a                  _rightSensorADC
- .text            0x0007b2        0x18c build/default/production/pwm.o
+ .text            0x0007b2        0x18c build/default/debug/pwm.o
                   0x0007b2                  _initPWMLeft
                   0x0007ec                  _initPWMRight
                   0x000814                  _spinForward
@@ -1320,14 +1361,14 @@ __c30_signature
                   0x0008bc                  _turnAround
                   0x0008fe                  _spinBackward
                   0x000930                  _idleFunction
- .text            0x00093e         0x7c build/default/production/timer.o
+ .text            0x00093e         0x7c build/default/debug/timer.o
                   0x00093e                  _delayUs
                   0x00096e                  _delayMs
                   0x00099e                  _initTimer1
- .text            0x0009ba         0x4e build/default/production/uartComm.o
+ .text            0x0009ba         0x4e build/default/debug/uartComm.o
                   0x0009ba                  _initUART
                   0x0009e6                  _waitForChar
- .text            0x000a08          0xe build/default/production/initSW.o
+ .text            0x000a08          0xe build/default/debug/initSW.o
                   0x000a08                  _initSW1
 
 .dinit            0x000a16          0x8

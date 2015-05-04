@@ -44,7 +44,7 @@ void initUART(){
     //Putting the UART interrupt flag down.
     IFS1bits.U2RXIF = 0;
     IEC1bits.U2RXIE = 1;
-    AD1PCFG = 0xFFFF; 
+    AD1PCFG = 0xFFFF;
 }
 
 char waitForChar(){
@@ -54,7 +54,7 @@ char waitForChar(){
     receivedChar = U1RXREG;
 
 
-
+    
    // while (U1STAbits.RIDLE == 1);
     while(IFS0bits.U1RXIF == 1){
         // Clear the UART RX interrupt flag to we can detect the reception
