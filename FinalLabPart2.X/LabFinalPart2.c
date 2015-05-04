@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "p24FJ64GA002.h"
-#include "lcd.h"
 #include "timer.h"
 #include "adc.h"
 #include "pwm.h"
@@ -59,29 +58,9 @@ void assignColors();
 //left 23, middle 24, right 25
 //Rb 12-14
 
-//FSM STATES--------------------
-typedef enum stateTypeEnum
-{
-        forwardState,
-        turnLeftState,
-        turnRightState,
-        wait,
-
-} stateType;
-
-
-//Waiting until the switch is pressed.
-volatile stateType currState;
-
-volatile int sensorLeftReading;
-volatile int sensorMiddleReading;
-volatile int sensorRightReading;
-
-volatile int sensorLeft;
-volatile int sensorMiddle;
-volatile int sensorRight;
 
 volatile char dataReceived;
+volatile int x;
 
 
 int main(void) {
@@ -90,125 +69,45 @@ int main(void) {
     initLEDs();
     initPWMLeft();
     initPWMRight();
-    initADC();
-    initSW1();
 
-   // initUART(); // Init UART.
-
-    currState = wait;
-
-    sensorRightReading = rightSensorADC();
-    sensorMiddleReading = middleSensorADC();
-    sensorLeftReading = leftSensorADC();
-    assignColors();
-    turnOnLED(13);
+    spinForward();
 
    // LED4 = OFF;
     
     while(true){
-        
-        if (currState != wait){ // Don't waste processing power reading the ADC while in wait state.
-            sensorRightReading = rightSensorADC();
-            sensorMiddleReading = middleSensorADC();
-            sensorLeftReading = leftSensorADC();
-            assignColors();
-            turnOnLED(13);
-        }
-       switch (currState){
-            case wait:
+               // spinForward();
                 /*
                  For part 2, The device will listen for commands with bluetooth while we are in the wait state.
                  Other states will be left in, but we will only enter them if the switch is pressed.
                  */
-
-                // TODO: check if waitforChar function works, decide what to do with certain button presses.
-
-
-                if (dataReceived == BUTTON1){
+                switch(dataReceived){ 
+                    case BUTTON1:
                     // forward
-                    spinForward();
-                }
-                if (dataReceived == BUTTON2){
+                        spinForward();
+                        break;
+                    case  BUTTON2:
                     // backwards
-                    spinBackward();
-                }
-                if (dataReceived == BUTTON3){
+                        spinBackward();
+                        break;
+                    case BUTTON3:
                     // stop
-                    idleFunction();
+                        idleFunction();
+                        break;
+                    case BUTTONLEFT:
+                        turnLeft();
+                        break;
+                    case BUTTONRIGHT:
+                        turnRight();
+                        break;
+                    default:
+                        idleFunction();
+                        break;
                 }
-                if (dataReceived == BUTTONLEFT){
-                    // Adjust left
-                    turnLeft();
-                }
-                if (dataReceived == BUTTONRIGHT){
-                    // Adjust Right
-                    turnRight();
-                }
-                if (dataReceived == BUTTONSPEED){
-                    // Adjust Speed
-                    ///// Make this function.
-                }
-
-                //idleFunction();
-                break;
-            case forwardState:
-                spinForward();
-                break;
-            case turnRightState:
-                turnRight();
-                break;
-            case turnLeftState:
-                turnLeft();
-                break;
-       }
-
+                x = 0;
     }
 }
 
-//Interrupt to get out of the Wait state
-void _ISR _CNInterrupt(void) {
-
-    IFS1bits.CNIF = 0; //put the flag down
-
-     if(_RB5 == PRESSED){
-
-         if (currState != wait){
-             currState = wait;
-         }
-         else if (currState == wait){
-            currState = forwardState;
-         }
-
-     }
-
-}
-
-/*
- This interrupts is the one that "listens" the infrared sensors and decides which way to turn
- depending on which sensors are picking up signals.
- */
-void _ISR _ADC1Interrupt(void){
-    IFS0bits.AD1IF = 0; //Put the interrupt flag down
-
-
-    //Decide on state based on sensor reading. Right sensor has priority.---------
-    if(currState != wait){
-        //If the sensors are exactly on the line and outside the line.
-
-        if (sensorLeft == black && sensorMiddle == black && sensorRight == black){
-            currState = turnRightState;
-        }else if (sensorRight == black){
-            currState = turnRightState;
-        }else if (sensorLeft == black){
-            currState = turnLeftState;
-        }else {
-            currState = forwardState;
-        }
-
-   }
 //----------------------------------------------------------------------------
-
-}
 
 
 void initLEDs(){
@@ -220,51 +119,14 @@ void initLEDs(){
 	LED6 = OFF;
 }
 
-void turnOnLED(int led){
-
-        if (sensorRight == black){
-            LED4 = ON;
-        }else{
-            LED4 = OFF;
-        }
-
-        if (sensorMiddle == black){
-            LED5 = ON;
-        }else{
-            LED5 = OFF;
-        }
-
-        if (sensorLeft == black){
-            LED6 = ON;
-        }else{
-            LED6 = OFF;
-        }
-}
-
-void assignColors(){
-    if(sensorRightReading < RightChangeThreshold){ //Buffer of pin 25
-        sensorRight = black;
-    }else {
-        sensorRight = white;
-    }
-
-    if(sensorMiddleReading < changeThreshold){ //Buffer of pin 24
-        sensorMiddle = black;
-    }else {
-        sensorMiddle = white;
-    }
-
-    if(sensorLeftReading < changeThreshold){ //Buffer of pin 23
-        sensorLeft = black;
-    }else {
-        sensorLeft = white;
-    }
-}
+//-----------------UART Interrupt------------------------------------------------
 
 void __attribute__((interrupt,auto_psv)) _U2RXInterrupt(void){
+    x = 1;
     IFS1bits.U2RXIF = 0;
     LED4=ON;
     LED4=OFF;
     dataReceived = U2RXREG;
     LED4=ON;
+    
 }
