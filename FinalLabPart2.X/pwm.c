@@ -15,9 +15,6 @@
 #define STOP 0
 #define fractionofFULLSPEED (unsigned int) ((PR3) * (double)(1.0/3.285) )
 
-
-
-
 void initPWMLeft(){
 
     TMR3 = 0;
@@ -53,7 +50,7 @@ void spinForward(){
     ODCBbits.ODB1 = 0;  // Pin 5
     RPOR0bits.RP1R = 18; // Pin 5
     ODCBbits.ODB2 = 1; // Pin 6
-    OC1RS = FULLSPEEDRIGHT;
+    OC1RS = (unsigned int) (PR3); 
 
     /*
      FOR RIGHT
@@ -62,7 +59,7 @@ void spinForward(){
     ODCBbits.ODB3 = 0;  // Pin 7
     RPOR1bits.RP3R = 19; // Pin 7
     ODCBbits.ODB4 = 1; // Pin 11
-    OC2RS = STOP;
+    OC2RS = (unsigned int) (PR3);
 
 }
 
@@ -120,15 +117,15 @@ void turnAround(){
 void spinBackward(){
     RPOR0bits.RP1R = 0; // Pin 5. set forward to 0
     ODCBbits.ODB2 = 0;  // Pin 6
-
     RPOR1bits.RP2R = 18; // Pin 6 set forward to 0
     ODCBbits.ODB1 = 1; //Pin 5
-
+    OC1RS = (unsigned int) (PR3);
 
     RPOR1bits.RP3R = 0; // PIN 7
     ODCBbits.ODB4 = 0; // Pin 11
     RPOR2bits.RP4R = 19; // Pin 11
     ODCBbits.ODB3 = 1; // Pin 7
+    OC2RS = (unsigned int) (PR3);
 }
 
 void idleFunction(){

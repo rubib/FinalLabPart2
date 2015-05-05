@@ -15,11 +15,11 @@
 #include "uartComm.h"
 #include <stdio.h>
 
-_CONFIG1( JTAGEN_OFF & GCP_OFF & GWRP_OFF & BKBUG_ON & COE_OFF & ICS_PGx1 &
-          FWDTEN_OFF & WINDIS_OFF & FWPSA_PR128 & WDTPS_PS32768 )
+_CONFIG1(JTAGEN_OFF & GCP_OFF & GWRP_OFF & BKBUG_ON & COE_OFF & ICS_PGx1 &
+        FWDTEN_OFF & WINDIS_OFF & FWPSA_PR128 & WDTPS_PS32768)
 
-_CONFIG2( IESO_OFF & SOSCSEL_SOSC & WUTSEL_LEG & FNOSC_PRIPLL & FCKSM_CSDCMD & OSCIOFNC_OFF &
-          IOL1WAY_OFF & I2C1SEL_PRI & POSCMOD_XT )
+_CONFIG2(IESO_OFF & SOSCSEL_SOSC & WUTSEL_LEG & FNOSC_PRIPLL & FCKSM_CSDCMD & OSCIOFNC_OFF &
+        IOL1WAY_OFF & I2C1SEL_PRI & POSCMOD_XT)
 
 #define true 1   // define true to use with bool data type.
 #define false 0  // define false for bool data type.
@@ -62,71 +62,78 @@ void assignColors();
 volatile char dataReceived;
 volatile int x;
 
-
 int main(void) {
     //Initialize components
     initUART(); // Init UART.
     initLEDs();
     initPWMLeft();
     initPWMRight();
+    x = 0;
+  //  spinForward();
+    idleFunction();
 
-    spinForward();
+    // LED4 = OFF;
 
-   // LED4 = OFF;
-    
-    while(true){
-               // spinForward();
-                /*
-                 For part 2, The device will listen for commands with bluetooth while we are in the wait state.
-                 Other states will be left in, but we will only enter them if the switch is pressed.
-                 */
-                switch(dataReceived){ 
-                    case BUTTON1:
+    while (true) {
+        // spinForward();
+        /*
+         For part 2, The device will listen for commands with bluetooth while we are in the wait state.
+         Other states will be left in, but we will only enter them if the switch is pressed.
+         */
+        if (x == 1) {
+            switch (dataReceived) {
+                case BUTTON1:
                     // forward
-                        spinForward();
-                        break;
-                    case  BUTTON2:
+                    spinForward();
+                    x = 0;
+                    break;
+                case BUTTON2:
                     // backwards
-                        spinBackward();
-                        break;
-                    case BUTTON3:
+                    spinBackward();
+                    x = 0;
+                    break;
+                case BUTTON3:
                     // stop
-                        idleFunction();
-                        break;
-                    case BUTTONLEFT:
-                        turnLeft();
-                        break;
-                    case BUTTONRIGHT:
-                        turnRight();
-                        break;
-                    default:
-                        idleFunction();
-                        break;
-                }
-                x = 0;
+                    idleFunction();
+                    x = 0;
+                    break;
+                case BUTTONLEFT:
+                    turnLeft();
+
+                    x = 0;
+                    break;
+                case BUTTONRIGHT:
+                    turnRight();
+                    x = 0;
+                    break;
+                default:
+                    idleFunction();
+                    x = 0;
+                    break;
+            }
+        }
     }
 }
 
 //----------------------------------------------------------------------------
 
-
-void initLEDs(){
-	TRISBbits.TRISB15 = 0;
-	TRISBbits.TRISB14 = 0;
-	TRISBbits.TRISB13 = 0;
-	LED4 = OFF;
-	LED5 = OFF;
-	LED6 = OFF;
+void initLEDs() {
+    TRISBbits.TRISB15 = 0;
+    TRISBbits.TRISB14 = 0;
+    TRISBbits.TRISB13 = 0;
+    LED4 = OFF;
+    LED5 = OFF;
+    LED6 = OFF;
 }
 
 //-----------------UART Interrupt------------------------------------------------
 
-void __attribute__((interrupt,auto_psv)) _U2RXInterrupt(void){
+void __attribute__((interrupt, auto_psv)) _U2RXInterrupt(void) {
     x = 1;
     IFS1bits.U2RXIF = 0;
-    LED4=ON;
-    LED4=OFF;
+    LED4 = ON;
+    LED4 = OFF;
     dataReceived = U2RXREG;
-    LED4=ON;
-    
+    LED4 = ON;
+
 }
